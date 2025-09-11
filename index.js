@@ -1,11 +1,21 @@
-async function main() {
-    console.log("Hello, World!");
-    let greet = "Greetings from the async function!";
-    console.log(greet);
+import { createWalletClient, custom } from "https://esm.sh/viem";
+
+const connectButton = document.getElementById('connectButton');
+const fundButton = document.getElementById('fundButton');
+
+let walletClient 
+
+async function connect() {
+    if( typeof window.ethereum !== 'undefined' ) {
+        walletClient = createWalletClient({
+            transport: custom(window.ethereum)
+        });
+       await walletClient.requestAddresses()
+        connectButton.innerHTML = "Connected."
+
+    } else {
+        connectButton.innerHTML = "Please install MetaMask to use this feature."
+    }
 }
 
-main().then(() => process.exit(0)).catch((error) => {
-    console.error(error);
-    process.exit(1);
-});
-
+connectButton.onclick = connect 
